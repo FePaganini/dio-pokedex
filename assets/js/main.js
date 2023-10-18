@@ -14,7 +14,7 @@ function convertPokemonToLi(pokemon) {
   const img = document.createElement("img");
 
   li.addEventListener("click", () => {
-    console.log("Hello there!");
+    showPokeModal(pokemon.number);
   });
   li.className = `pokemon ${pokemon.type}`;
   li.append(spanNumber, spanName, div);
