@@ -6,29 +6,50 @@ const limit = 10;
 let offset = 0;
 
 function convertPokemonToLi(pokemon) {
-  return `
-        <li class="pokemon ${pokemon.type}">
-            <span class="number">#${pokemon.number}</span>
-            <span class="name">${pokemon.name}</span>
+  const li = document.createElement("li");
+  const spanNumber = document.createElement("span");
+  const spanName = document.createElement("span");
+  const div = document.createElement("div");
+  const ol = document.createElement("ol");
+  const img = document.createElement("img");
 
-            <div class="detail">
-                <ol class="types">
-                    ${pokemon.types
-                      .map((type) => `<li class="type ${type}">${type}</li>`)
-                      .join("")}
-                </ol>
+  li.addEventListener("click", () => {
+    console.log("Hello there!");
+  });
+  li.className = `pokemon ${pokemon.type}`;
+  li.append(spanNumber, spanName, div);
 
-                <img src="${pokemon.photo}"
-                     alt="${pokemon.name}">
-            </div>
-        </li>
-    `;
+  spanNumber.className = "number";
+  spanNumber.textContent = `#${pokemon.number}`;
+
+  spanName.className = "name";
+  spanName.textContent = pokemon.name;
+
+  div.className = "detail";
+  div.append(ol, img);
+
+  ol.className = "types";
+  pokemon.types.forEach((type) => {
+    const liType = document.createElement("li");
+    liType.className = `type ${type}`;
+    liType.textContent = type;
+    ol.appendChild(liType);
+  });
+
+  img.src = pokemon.photo;
+  img.alt = pokemon.name;
+
+  return li;
 }
 
 function loadPokemonItens(offset, limit) {
+  const fragmentLi = document.createDocumentFragment();
+
   pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
-    const newHtml = pokemons.map(convertPokemonToLi).join("");
-    pokemonList.innerHTML += newHtml;
+    pokemons.forEach((pokemon) => {
+      fragmentLi.appendChild(convertPokemonToLi(pokemon));
+    });
+    pokemonList.appendChild(fragmentLi);
   });
 }
 
